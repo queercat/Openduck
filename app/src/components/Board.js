@@ -27,7 +27,7 @@ export default class Board extends React.Component {
             }
         }
 
-        this.setState(newState);
+        this.state = newState;
     }
 
     coordinateInBounds(coordinate) {
@@ -47,7 +47,7 @@ export default class Board extends React.Component {
             return (this.state[coordinate].board === this);
         }
 
-        return true;
+        return false;
     }
 
     // utilty function to add two [x, y] [x, y] values
@@ -62,7 +62,7 @@ export default class Board extends React.Component {
         let stateCopy = this.state;
         stateCopy[position] = piece;
 
-        this.setState(stateCopy);
+        this.state = stateCopy;
     }
 
     // moves a piece based on coordinate position.
@@ -72,7 +72,7 @@ export default class Board extends React.Component {
         stateCopy[newPosition] = stateCopy[oldPosition];
         stateCopy[oldPosition] = null;
 
-        this.setState(stateCopy);
+        this.state = stateCopy;
     }
 
     convertCoordinatePositionToAlgebraic(position) {
@@ -85,9 +85,7 @@ export default class Board extends React.Component {
         super(props);
 
         // composed of an (X, Y) tuple relating to a piece's position. 
-        this.state = {
-            squares: {}
-        }
+        this.state = {}
 
         this.initializeBoard();
     }

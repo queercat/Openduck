@@ -60,7 +60,7 @@ export default class Pawn extends Piece {
         if (this.color == "White") {
             this.direction = 1;
         } else {
-            this.direction = -1; 
+            this.direction = -1;
         }
 
         this.hasMoved = false;
