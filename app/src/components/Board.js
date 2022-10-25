@@ -1,5 +1,5 @@
 import Pawn from './Piece';
-import React from 'react';
+import React, { useState } from 'react';
 
 /** BOARD *
  * 0,7
@@ -14,34 +14,65 @@ import React from 'react';
 */
 
 export default class Board extends React.Component {
-    // composed of an (X, Y) tuple relating to a piece's position. 
-    state = {};
+    // composed of a sequence of coordinate moves.
+    moves = [];
 
     initializeBoard() {
-        for (let x = 0; x < 8; x++){
+        let newState = [];
+        
+        for (let x = 0; x < 8; x++) {
             for (let y = 0; y < 8; y++) {
-                this.state[[x,y]] = null; 
+                
+                newState[x, y] = null;
             }
         }
+
+        this.setState(newState);
+    }
+
+    coordinateInBounds(coordinate) {
+        if (coordinate[0] > 7 || coordinate[0] < 0) {
+            return false;
+        } 
+
+        if (coordinate[1] > 7 || coordinate[1] < 0) {
+            return false;
+        } 
+
+        return true;
+    }
+
+    coordinateOccupied(coordinate) {
+        if (this.state[coordinate] != null) {
+            return (this.state[coordinate].board === this);
+        }
+
+        return true;
     }
 
     // utilty function to add two [x, y] [x, y] values
     coordinateAdd(addend0, addend1) {
         let newCoordinate = [addend0[0] + addend1[0], addend0[1] + addend1[1]];
+
+        return newCoordinate;
     }
 
     // set a square to a piece.
     updateSquare(position, piece) {
-        this.state[position] = piece;
+        let stateCopy = this.state;
+        stateCopy[position] = piece;
+
+        this.setState(stateCopy);
     }
 
-    // calculates the valid movement (if is) then updates the board.
-    movePiece(piece, newPosition) {
-        if ((typeof(piece) == typeof(null) || typeof(piece) == typeof(undefined) && piece.name != "")) {
-            console.log("Invalid piece type.");
-        } else {
-            let validMoves = piece.getValidMoves(this);
-        }
+    // moves a piece based on coordinate position.
+    movePiece(oldPosition, newPosition) {
+        let stateCopy = this.state;
+
+        stateCopy[newPosition] = stateCopy[oldPosition];
+        stateCopy[oldPosition] = null;
+
+        this.setState(stateCopy);
     }
 
     convertCoordinatePositionToAlgebraic(position) {
@@ -52,6 +83,11 @@ export default class Board extends React.Component {
 
     constructor(props) {
         super(props);
+
+        // composed of an (X, Y) tuple relating to a piece's position. 
+        this.state = {
+            squares: {}
+        }
 
         this.initializeBoard();
     }
